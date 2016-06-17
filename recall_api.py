@@ -53,7 +53,7 @@ def muti_fild(dic):    # 다중 필드 쿼리파라미터 생성
         fild_list.append('{{"{key}":"{val}"}}'.format(key=fild,val=dic[fild]))
     return ",".join(fild_list)
 
-# 할일 : search 함수 코드 테스트
+# 테스트 완료
 def search(dic, mode="one"):
     """
     model_query 파라미터 생성하는 함수
@@ -61,6 +61,7 @@ def search(dic, mode="one"):
     :param mode: and,or 검색시 표시
     :return: model_query터 요청 파라미터
     """
+    dic = fild_check(dic)
     params = {}
     if mode == "one":
         # 필드 수량 검사
@@ -71,7 +72,7 @@ def search(dic, mode="one"):
         return params
     elif mode == "and":
         # 필드 수량 검사
-        if not len(dic) >= 2:  # 질의할 필드가 2개이상이 아닌역우 오류 발생
+        if not len(dic) >= 2:  # 질의할 필드가 2개이상이 아닌경우 오류 발생
             warnings.warn("and 질의시 2개 이상의 필드에 대해 질의해야 합니다.", SyntaxWarning)
 
         dic = muti_fild(dic)
@@ -111,6 +112,15 @@ def request_api(params,mode="page"):
 params = {"model_query_pageable":'{"enable":"true","pageSize":2}',"model_query_fields":'{"productName":1}'}
 pprint(request_api(params))
 
-test_params = {"A": 'a','B': 'b'}
+test_params = { "recallType": 'a'}
+test_params2 = { "recallType":'b',"recallAction": 'cd'}
 print (muti_fild(test_params))
 print (fild_check(test_params))
+# mode one test
+print(search(test_params))
+print(search(test_params2))
+
+# mode and test
+print(search(test_params2,mode="and"))
+# mode or test
+print(search(test_params2,mode="or"))
