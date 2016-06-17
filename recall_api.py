@@ -4,11 +4,22 @@ from pprint import pprint
 #인증키파일 추가 key="인증번호"
 from api_key import key
 
-
+'''
+기업표준정보은행에서 제공하는 리콜상세api 연결 모듈 입니다.
+api에 검색요청을 보내는 과정은 다음과 같습니다.
+자연어 수준의 검색사항 입력시 ask_fild 리스트에 튜플생성 [(<필드명>,<비교연산자>,<기준값>),...]
+ex. ask_fild = [("companyName",=,"무한상사"),...]
+해당 리스트를 알맞은 쿼리파라미터로 변환
+이후 최종적으로 요청 파라미터 생성
+len(ask_filde)==1 이면 단일 질의로 처리
+2개 이상이면 함께 전달받은 인자를 바탕으로 and,or 파라미터 생성
+api로 자료 요청
+받은 자료를 정리
+'''
 
 
 # 쿼리파라미터 제작 함수
-
+# 테스트 완료
 def fild_check(dic):
     """
     요청받은 쿼리파라미터의 필드명을 검수. 잘못된 필드명 확인시 경고발생
@@ -35,6 +46,7 @@ def fild_check(dic):
     else:
         warnings.warn("다음 필드명이 일치 하지 않습니다. : {0}".format(name_error),SyntaxWarning)
 
+# 테스트 완료
 def muti_fild(dic):    # 다중 필드 쿼리파라미터 생성
     fild_list=[]
     for fild in dic:
@@ -98,3 +110,7 @@ def request_api(params,mode="page"):
 # test 파라미터
 params = {"model_query_pageable":'{"enable":"true","pageSize":2}',"model_query_fields":'{"productName":1}'}
 pprint(request_api(params))
+
+test_params = {"A": 'a','B': 'b'}
+print (muti_fild(test_params))
+print (fild_check(test_params))
