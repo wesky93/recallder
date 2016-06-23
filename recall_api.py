@@ -1,11 +1,12 @@
 import requests
 import warnings
+import collections
 from pprint import pprint
 # 인증키파일 추가 key="인증번호"
 from api_key import key
 
 # API 매개변수 생성 함수
-def make_parm(name,list):
+def make_parm(name,parm_list):
     """
     API매개변수 명과 각 매개변수 필드 리스트를 받아 none을 제외한 필드로 매개변수를 생성한다
     :param name: 매개변수명
@@ -13,7 +14,7 @@ def make_parm(name,list):
     :return:
     """
     parm = []
-    for f in list:
+    for f in parm_list:
         if f != None:
             parm.append(f)
     return '''\"{0}\" : \'{{ {1} }}\' '''.format(name,",".join(parm))
@@ -80,6 +81,8 @@ class Page:
         self.fnum = None
         self.fsize = None
         self.fsort = None
+        self.parms = None
+
 
     def Enable(self,bool= False):
         """
@@ -114,12 +117,13 @@ class Page:
 
 
     def __repr__(self):
+        parmname = "model_query_pageable"
         fild = [self.fenable,self.fnum,self.fsize,self.fsort]
         parm = []
         for f in fild:
             if f != None:
                 parm.append(f)
-        self.parms = '''\"model_query_pageable\" : \'{{ {0} }}\' '''.format(",".join(parm))
+        self.parms = make_parm(parmname,fild)
         return self.parms
 
 
