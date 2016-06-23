@@ -4,6 +4,7 @@ from pprint import pprint
 # 인증키파일 추가 key="인증번호"
 from api_key import key
 
+
 class recallAPI:
     """
     리콜API에 연결하고 자료를 요청하는 객체입니다
