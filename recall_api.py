@@ -35,7 +35,7 @@ class Page:
         """
         매개변수 인수값 초기화
         """
-        self.enable = '\"enable\" : {}'.format(enable)
+        self.enable = '\"enable\" : {}'.format(str(enable).lower())
         self.num = '\"pageNumber\" : {}'.format(page_num)
         self.size = '\"pageSize\" : {}'.format(page_size)
         self.sort = []
