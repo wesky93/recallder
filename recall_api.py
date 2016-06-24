@@ -17,50 +17,8 @@ def make_parm(name,parm_list):
     for f in parm_list:
         if f != None:
             parm.append(f)
-    return '''\"{0}\" : \'{{ {1} }}\' '''.format(name,",".join(parm))
+    return '''\'{{ {} }}\' '''.format(",".join(parm))
 
-class recallAPI:
-    """
-    리콜API에 연결하고 자료를 요청하는 객체입니다
-
-    """
-    def __init__(self):
-        pass
-
-    def request(self):
-        api_key = key()
-        url = "http://www.ibtk.kr/recallDetail_api/{key}".format(key=api_key)
-
-        #매겨변수 취합
-
-        #자료 요청
-        r = requests.get(url,)
-        data = r.json()
-        return data
-
-    def search(self,C_search):
-        """
-        검색 매개변수 처리 메소드
-        :param C_search: 검색 인스턴스를 인수르 받는다.
-        :return:
-        """
-        pass
-
-    def page(self,C_page):
-        """
-        페이징 매개변수 처리 메소드
-        :param C_page: 페이징 인스턴스를 인수로 받는다.
-        :return:
-        """
-        pass
-
-    def view(self,C_view):
-        """
-        출력여부 매개변수 처리 메소드
-        :param C_view:
-        :return:
-        """
-        pass
 
 class Search:
     """
@@ -118,7 +76,6 @@ class Page:
         return make_parm(parmname,parm)
 
 
-
 class View:
     """
     출력 필드 인수를 받아 취합, 리콜api의 매개변수로 활용
@@ -128,10 +85,48 @@ class View:
             print("출력은 1, 출력안함은 0 입니다")
             return
 
-        self.parm = '"{}" : {}'.format(fild,valv)
+        self.parm = ['"{}" : {}'.format(fild,valv)]
 
     def __repr__(self):
         parmaname = "model_query_fields"
         return make_parm(parmaname,self.parm)
 
 
+class recall:
+    """
+    리콜API에 연결하고 자료를 요청하는 객체입니다
+
+    """
+    def __init__(self):
+        self.search = None
+        self.page = None
+        self.view = None
+        self.parms = {}
+
+    def Request(self):
+        api_key = key()
+        url = "http://www.ibtk.kr/recallDetail_api/{key}".format(key=api_key)
+
+        #매겨변수 취합
+        parms = [self.search,self.page,self.view]
+        for parm in parms:
+            if parm != None:
+                self.parms.update(parm)
+
+        #자료 요청
+        r = requests.get(url,params=self.parms)
+        self.data = r.json()
+        return self.data
+
+
+    def Search(self,search):
+        # 검색 매개변수 클래스를 받음
+        self.search = {"model_query" : search }
+
+    def Page(self,page):
+        # 페이징 매개변수 클래스를 받음
+        self.page = {"model_query_pageable" : page }
+
+    def View(self,view):
+        # 출력여부 매개변수 클래스를 받음
+        self.view = {"model_query_fields" : view }
