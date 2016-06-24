@@ -1,6 +1,5 @@
 import requests
-import warnings
-import collections
+
 from pprint import pprint
 # 인증키파일 추가 key="인증번호"
 from api_key import key
