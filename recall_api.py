@@ -73,60 +73,49 @@ class Page:
     """
     페이징 처리 인수를 받아 취합, 리콜api의 매개변수로 활용
     """
-    def __init__(self):
+    def __init__(self, enable=True, page_num=0, page_size=10):
         """
         매개변수 인수값 초기화
         """
-        self.fenable = None
-        self.fnum = None
-        self.fsize = None
-        self.fsort = None
+        self.enable = '\"enable\" : {}'.format(enable)
+        self.num = '\"pageNumber\" : {}'.format(page_num)
+        self.size = '\"pageSize\" : {}'.format(page_size)
+        self.sort = []
+        self.sortOder = None
         self.parms = None
 
+    def Sortoder(self,fild,valv):
+        if valv not in (-1,1):
+            print("값은 -1 혹은 1 이어야 합니다.")
+            return
 
-    def Enable(self,bool= False):
-        """
-        페이지 처리여부
-        :param bool: 기본 False / True시 페이징 처리함
-        :return:
-        """
-        self.fenable = '\"enable\" : {0}'.format(bool)
+        exi_fild = [x['property'] for x in self.sort]
+        sort = list(self.sort)
 
-    def Num(self,num=0):
-        """
-        페이지 번호
-        :param num:
-        :return:
-        """
-        self.fnum = '\"pageNumber\" : {0}'.format(num)
+        if fild not in exi_fild:
+            sort.append({"property": fild, "direction" : valv})
+        else:
+            for d in sort:
+                if d["property"] == fild:
+                    d["direction"] = valv
 
-    def Size(self,num=10):
-        """
-        페이지당 행 갯수
-        :param num: 기본값 10
-        :return:
-        """
-        self.fsize = '\"pageSize\" : {0}'.format(num)
+        self.sort = sort
+        self.sortOder = '\"sortOder\" : {}'.format(self.sort)
 
-    def Sort(self):
-        """
-        각 필드별 정렬 조건
-        :return:
-        """
-        pass
+    def Delsort(self):
+        self.sort = []
+        self.sortOder = None
 
 
     def __repr__(self):
+        # page 매개변수를 반환
         parmname = "model_query_pageable"
-        fild = [self.fenable,self.fnum,self.fsize,self.fsort]
+        fild = [ self.enable, self.num, self.size, self.sortOder ]
         parm = []
         for f in fild:
             if f != None:
                 parm.append(f)
-        self.parms = make_parm(parmname,fild)
-        return self.parms
-
-
+        return make_parm(parmname,parm)
 
 
 
@@ -134,5 +123,15 @@ class View:
     """
     출력 필드 인수를 받아 취합, 리콜api의 매개변수로 활용
     """
-    pass
+    def __init__(self,fild,valv):
+        if valv not in (1,0):
+            print("출력은 1, 출력안함은 0 입니다")
+            return
+
+        self.parm = '"{}" : {}'.format(fild,valv)
+
+    def __repr__(self):
+        parmaname = "model_query_fields"
+        return make_parm(parmaname,self.parm)
+
 
