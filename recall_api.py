@@ -16,7 +16,7 @@ def make_parm(name,parm_list):
     for f in parm_list:
         if f != None:
             parm.append(f)
-    return '''\'{{ {} }}\' '''.format(",".join(parm))
+    return '''{{ {} }}'''.format(",".join(parm))
 
 
 class Search:
@@ -72,7 +72,8 @@ class Page:
         for f in fild:
             if f != None:
                 parm.append(f)
-        return make_parm(parmname,parm)
+        self.parms = make_parm(parmname,parm)
+        return self.parms
 
 
 class View:
@@ -114,6 +115,7 @@ class recall:
 
         #자료 요청
         r = requests.get(url,params=self.parms)
+        self.url = r.url
         self.data = r.json()
         return self.data
 
