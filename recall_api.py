@@ -122,12 +122,26 @@ class recall:
 
     def Search(self,search):
         # 검색 매개변수 클래스를 받음
-        self.search = {"model_query" : search }
+        if isinstance(search, Search):
+            self.search = {"model_query": search}
+        else:
+            print("올바른 인스턴스가 아닙니다. Search 인스턴스를 입력하세요")
+            return
+
 
     def Page(self,page):
         # 페이징 매개변수 클래스를 받음
-        self.page = {"model_query_pageable" : page }
+        if isinstance(page,Page):
+            self.page = {"model_query_pageable": page}
+        else:
+            print("올바른 인스턴스가 아닙니다. Page 인스턴스를 입력하세요")
+            return
+
 
     def View(self,view):
         # 출력여부 매개변수 클래스를 받음
-        self.view = {"model_query_fields" : view }
+        if isinstance(view,View):
+            self.view = {"model_query_fields" : view }
+        else:
+            print("올바른 인스턴스가 아닙니다. View인스턴스를 입력하세요")
+            return
